@@ -1,0 +1,48 @@
+---
+- name: Lock root user
+  ansible.builtin.user:
+    name: root
+    password_lock: true
+
+- name: Enable community repo
+  ansible.builtin.replace:
+    path: /etc/apk/repositories
+    regexp: '#(.*v.*\/community)'
+    replace: '\1'
+
+- name: Install htop, podman
+  community.general.apk:
+    name: htop,podman
+
+- name: Upgrade all packages
+  community.general.apk:
+    upgrade: true
+
+- name: Enable cgroups v2
+  notify: reboot
+  ansible.builtin.lineinfile:
+    path: /etc/rc.conf
+    regexp: '^rc_cgroup_mode='
+    line: rc_cgroup_mode=unified
+
+- name: Start cgroups service
+  notify: reboot
+  ansible.builtin.service:
+    name: cgroups
+    enabled: true
+
+- name: Enable ip_tables module
+  notify: reboot
+  ansible.builtin.lineinfile:
+    path: /etc/modules
+    line: 'ip_tables'
+
+- name: Add subuid
+  ansible.builtin.lineinfile:
+    path: /etc/subuid
+    line: 'node:100000:65536'
+
+- name: Add subgid
+  ansible.builtin.lineinfile:
+    path: /etc/subgid
+    line: 'node:100000:65536'

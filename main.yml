@@ -1,0 +1,11 @@
+---
+- name: Setup
+  hosts: all
+  roles:
+    - name: setup
+      become: true
+
+#- name: Setup Portainer
+#  hosts: all
+#  roles:
+#    - portainer

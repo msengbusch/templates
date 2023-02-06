@@ -1,0 +1,8 @@
+---
+- name: Setup Portainer
+  when: portainer == true
+  include_tasks: portainer.yml
+
+- name: Setup Portainer Agent
+  when: portainer == false
+  include_tasks: agent.yml

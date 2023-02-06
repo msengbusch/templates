@@ -1,9 +1,10 @@
-version: '3'
-services:
-  portainer_agent:
-    image: portainer/agent:latest
-    restart: always
-    ports:
+---
+- name: Run Portainer Agent
+  containers.podman.podman_container:
+    name: portainer_agent
+    image: portainer/agent
+    restart_policy: always
+    publish:
       - 9001:9001
     volumes:
       - /tmp/podman-run-1000/podman/podman.sock:/var/run/docker.sock
