@@ -1,11 +1,14 @@
 ---
-- name: Setup
-  hosts: all
-  roles:
-    - name: setup
-      become: true
-
-#- name: Setup Portainer
+#- name: Setup
 #  hosts: all
 #  roles:
-#    - portainer
+#    - role: setup
+#      become: true
+#      tags: [ setup ]
+
+- name: Setup Portainer
+  hosts: all
+  roles:
+    - role: portainer
+      vars:
+        agent_only: false

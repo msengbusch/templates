@@ -2,10 +2,11 @@
 - name: Run Portainer Agent
   containers.podman.podman_container:
     name: portainer_agent
-    image: portainer/agent
+    image: docker.io/portainer/agent
     restart_policy: always
     publish:
       - 9001:9001
     volumes:
       - /tmp/podman-run-1000/podman/podman.sock:/var/run/docker.sock
       - /home/node/.local/share/containers/storage/volumes:/var/lib/docker/volumes
+

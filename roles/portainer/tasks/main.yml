@@ -1,8 +1,26 @@
 ---
-- name: Setup Portainer
-  when: portainer == true
-  include_tasks: portainer.yml
+- name: Create Portainer Pod
+  containers.podman.podman_pod:
+    name: podman
+    publish:
+      - 9443:9443
 
-- name: Setup Portainer Agent
-  when: portainer == false
-  include_tasks: agent.yml
+- name: Run Portainer
+  containers.podman.podman_container:
+    name: portainer
+    image: docker.io/portainer/portainer-ee
+    restart_policy: always
+    pod: podman
+    volumes:
+      - data:/data
+
+- name: Run Portainer Agent
+  containers.podman.podman_container:
+    name: portainer_agent
+    image: docker.io/portainer/agent
+    restart_policy: always
+    pod: podman
+    volumes:
+      #- /tmp/podman-run-1000/podman/podman.sock:/var/run/docker.sock
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock
+      - /home/rocky/.local/share/containers/storage/volumes:/var/lib/docker/volumes

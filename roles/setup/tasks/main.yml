@@ -1,8 +1,11 @@
 ---
 - name: Lock root user
-  ansible.builtin.user:
-    name: root
-    password_lock: true
+  ansible.builtin.lineinfile:
+    path: /etc/passwd
+    backrefs: true
+    backup: true
+    regexp: '(root:.*:)'
+    line: '\1/sbin/nologin'
 
 - name: Enable community repo
   ansible.builtin.replace:
